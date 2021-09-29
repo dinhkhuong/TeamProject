@@ -1,0 +1,8 @@
+stick,lose
+stick,lose
+stick,lose
+switch,won
+switch,won
+switch,won
+switch,lose
+stick,won

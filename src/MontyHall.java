@@ -1,7 +1,18 @@
+import java.io.*;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.Scanner;
 import java.util.Random;
+
 public class MontyHall {
+    private static boolean stickOrSwitch;
+    private static boolean winOrLose;
     public static void cpuGame(){
+
         int prizeLocation = (int)((Math.random() * 3) + 1); // random number between 1 and 3 inclusive
         int cpuChoice = (int)((Math.random() * 3) + 1);
         System.out.println("cpu chose door #"+ cpuChoice);
@@ -48,15 +59,19 @@ public class MontyHall {
         if (rand.nextBoolean()){
             sORS = cpuChoice;
             System.out.println("cpu has chose to stick");
+            stickOrSwitch = true;
         }else {
             sORS = switchableDoor;
             System.out.println("cpu has chose to switch");
+            stickOrSwitch = false;
         }
         System.out.println("The prize is behind door #"+ prizeLocation);
         if (sORS==prizeLocation){
             System.out.println("cpu has won the prize");
+            winOrLose = true;
         }else {
             System.out.println("cpu has lose");
+            winOrLose = false;
         }
     }
     public static void game(Scanner scan){
@@ -154,12 +169,14 @@ public class MontyHall {
             {
                 isInvalid = false;
                 System.out.println("You have chosen to stick with Door #" + playerChoice + ".");
+                stickOrSwitch = true;
             }
             else if(switchChoice == switchableDoor)
             {
                 isInvalid = false;
                 switched = true;
                 System.out.println("You have chosen to switch to Door #" + switchableDoor + ".");
+                stickOrSwitch = false;
             }
             else
             {
@@ -172,10 +189,12 @@ public class MontyHall {
             if(switchableDoor == prizeLocation)
             {
                 System.out.println("You switched to the right door. Congratulations!");
+                winOrLose = true;
             }
             else
             {
                 System.out.println("You switched to the wrong door. Too Bad!");
+                winOrLose = false;
             }
         }
         else
@@ -183,13 +202,33 @@ public class MontyHall {
             if(playerChoice == prizeLocation)
             {
                 System.out.println("You stuck to the right door. Congratulations!");
+                winOrLose = true;
             }
             else
             {
                 System.out.println("You stuck to the wrong door. Too Bad!");
+                winOrLose = false;
             }
         }
         System.out.println("The prize was behind Door #" + prizeLocation + ".\nThanks for playing!");
+    }
+    public static void log(){
+        String fileName = "log.txt";
+
+        String choice = stickOrSwitch? "stick":"switch";
+        String result = winOrLose? "won":"lose";
+        //Charset charset = StandardCharsets.UTF_8;
+        Path path = Paths.get(fileName);
+        try {
+
+            Files.write(path, (choice+","+result+"\n").getBytes(), StandardOpenOption.APPEND);
+
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
     }
     public static void main(String[] args) {
         String who = null;
@@ -214,8 +253,11 @@ public class MontyHall {
                     case "com":
                     case "c":
                         cpuGame();
+
                         break;
                 }
+                //System.out.println(String.valueOf(stickOrSwitch) + String.valueOf(winOrLose));
+                log();
                 System.out.println("Do you want to play again? ");
                 again = scan.nextLine();
             } while (again.equals("y") || again.equals("Y") || again.equals("yes") || again.equals("YES"));

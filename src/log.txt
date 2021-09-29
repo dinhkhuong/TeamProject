@@ -1,0 +1,1 @@
+switch,wonstick,losestick,losestick,lose
