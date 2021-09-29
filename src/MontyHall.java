@@ -42,15 +42,22 @@ public class MontyHall {
             }
         }
         System.out.println("Door #" + doorToOpen + " is opened and does not contain the prize...");
-        System.out.println("cpu may switch to (Door #" + switchableDoor + ") or stick to door #"+cpuChoice+" ?");
+        System.out.println("cpu may switch to door #" + switchableDoor + ") or stick to door #"+cpuChoice+"?");
         Random rand= new Random();
         int sORS = -1;
         if (rand.nextBoolean()){
-            sORS = doorToOpen;
+            sORS = cpuChoice;
+            System.out.println("cpu has chose to stick");
         }else {
             sORS = switchableDoor;
+            System.out.println("cpu has chose to switch");
         }
-        System.out.println("cpu chose door# "+ sORS);
+        System.out.println("The prize is behind door #"+ prizeLocation);
+        if (sORS==prizeLocation){
+            System.out.println("cpu has won the prize");
+        }else {
+            System.out.println("cpu has lose");
+        }
     }
     public static void game(Scanner scan){
         int playerChoice = -1; // int representing the player's door choice
@@ -189,19 +196,23 @@ public class MontyHall {
         String again = null;
         try(Scanner scan = new Scanner(System.in)) { // Initialize Scanner
             do {
-                System.out.println("Do you play or let machine play?(Yes/No,yes/no,Y/N,y/n) ");
+                System.out.println("Do you play or let the computer play? (me/com, m/c) ");
                 who = scan.nextLine();
                 switch (who) {
                     case "Yes":
                     case "yes":
                     case "Y":
                     case "y":
+                    case "me":
+                    case "m":
                         game(scan);
-                        //break;
+                        break;
                     case "No":
                     case "no":
                     case "N":
                     case "n":
+                    case "com":
+                    case "c":
                         cpuGame();
                         break;
                 }
