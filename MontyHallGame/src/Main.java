@@ -1,3 +1,8 @@
+import java.io.File;
+import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Main
@@ -115,16 +120,73 @@ public class Main
             }
         }
 
-        // Displays result of game
+        // Check to see if log file is present, if not create one with blank statistics
+        File tempFile = new File("log.txt");
+        boolean exists = tempFile.exists();
+        if(!exists)
+        {
+            try
+            {
+                PrintWriter writer = new PrintWriter("log.txt", "UTF-8");
+                writer.print("Switch Wins: 0\n" +
+                        "Stick Picks: 0\n" +
+                        "Switch Wins: 0\n" +
+                        "Switch Picks: 0");
+                writer.close();
+            }
+            catch(Exception e)
+            {
+                e.printStackTrace();
+            }
+        }
+
+        // Read in log.txt and store in String stats
+        String stats = "";
+        try
+        {
+            stats = new String(Files.readAllBytes(Paths.get("log.txt")));
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        // Break stats into an ArrayList where each entry in the list represents a line of the String
+        ArrayList<String> list = new ArrayList<>();
+        String str = "";
+        for(int i = 0; i < stats.length(); i++)
+        {
+            if(stats.charAt(i) == '\n')
+            {
+                list.add(str);
+                str = "";
+            }
+            else
+            {
+                str += stats.charAt(i);
+            }
+        }
+        list.add(str);
+
+        // Displays result of game and increment stats in ArrayList
         if(switched)
         {
             if(switchableDoor == prizeLocation)
             {
                 System.out.println("You switched to the right door. Congratulations!");
+                int switchWins = Integer.parseInt(list.get(2).substring(list.get(2).length() - 1));
+                switchWins++;
+                list.set(2, "Switch Wins: " + switchWins);
+                int switchPicks = Integer.parseInt(list.get(3).substring(list.get(3).length() - 1));
+                switchPicks++;
+                list.set(3, "Switch Picks: " + switchPicks);
             }
             else
             {
                 System.out.println("You switched to the wrong door. Too Bad!");
+                int switchPicks = Integer.parseInt(list.get(3).substring(list.get(3).length() - 1));
+                switchPicks++;
+                list.set(3, "Switch Picks: " + switchPicks);
             }
         }
         else
@@ -132,12 +194,44 @@ public class Main
             if(playerChoice == prizeLocation)
             {
                 System.out.println("You stuck to the right door. Congratulations!");
+                int stickWins = Integer.parseInt(list.get(0).substring(list.get(0).length() - 1));
+                stickWins++;
+                list.set(0, "Switch Wins: " + stickWins);
+                int stickPicks = Integer.parseInt(list.get(1).substring(list.get(1).length() - 1));
+                stickPicks++;
+                list.set(1, "Stick Picks: " + stickPicks);
             }
             else
             {
                 System.out.println("You stuck to the wrong door. Too Bad!");
+                int stickPicks = Integer.parseInt(list.get(1).substring(list.get(1).length() - 1));
+                stickPicks++;
+                System.out.println(stickPicks);
+                list.set(1, "Stick Picks: " + stickPicks);
             }
         }
         System.out.println("The prize was behind Door #" + prizeLocation + ".\nThanks for playing!");
+
+        // Update log file by writing updated new statistics over old statistics
+        try
+        {
+            PrintWriter writer = new PrintWriter("log.txt", "UTF-8");
+            for(int i = 0; i < list.size(); i++)
+            {
+                writer.print(list.get(i));
+                if(i != list.size() - 1)
+                {
+                    writer.print("\n");
+                }
+            }
+            writer.close();
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        // Display updated statistics after storage
+        System.out.println(list);
     }
 }
