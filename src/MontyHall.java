@@ -1,10 +1,7 @@
 import java.util.Scanner;
 
 public class MontyHall {
-    public static void main(String[] args) {
-
-        Scanner scan = new Scanner(System.in); // Initialize Scanner
-
+    public static void game(Scanner scan){
         int playerChoice = -1; // int representing the player's door choice
         boolean isInvalid = true; // boolean used for checking input
 
@@ -31,7 +28,6 @@ public class MontyHall {
                 System.out.println("We do not have a door with that number!");
             }
         }
-
         // The following section of code assigns int variables to their correct values
         // prizeLocation indicates the random door location of prize
         // doorToOpen indicates the empty door to be opened before the switch choice
@@ -73,7 +69,6 @@ public class MontyHall {
                 }
             }
         }
-
         System.out.println("Door #" + doorToOpen + " is opened and does not contain the prize...");
         System.out.print("Before the other doors are opened, ");
         System.out.print("do you want to keep your original door choice (Door #" + playerChoice + "), ");
@@ -90,6 +85,7 @@ public class MontyHall {
             try
             {
                 switchChoice = scan.nextInt();
+                scan.nextLine();
             }
             catch(Exception e)
             {
@@ -112,7 +108,6 @@ public class MontyHall {
                 System.out.println("Invalid door number!");
             }
         }
-
         // Displays result of game
         if(switched)
         {
@@ -137,5 +132,31 @@ public class MontyHall {
             }
         }
         System.out.println("The prize was behind Door #" + prizeLocation + ".\nThanks for playing!");
+    }
+    public static void main(String[] args) {
+        String who = null;
+        String again = null;
+        try(Scanner scan = new Scanner(System.in)) { // Initialize Scanner
+            do {
+                System.out.println("Do you play or let machine play?(Yes/No,yes/no,Y/N,y/n) ");
+                who = scan.nextLine();
+                switch (who) {
+                    case "Yes":
+                    case "yes":
+                    case "Y":
+                    case "y":
+                        game(scan);
+                        //break;
+                    case "No":
+                    case "no":
+                    case "N":
+                    case "n":
+                        break;
+                }
+                System.out.println("Do you want to play again? ");
+                again = scan.nextLine();
+            } while (again.equals("y") || again.equals("Y") || again.equals("yes") || again.equals("YES"));
+        }
+
     }
 }
