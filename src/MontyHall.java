@@ -1,6 +1,57 @@
 import java.util.Scanner;
-
+import java.util.Random;
 public class MontyHall {
+    public static void cpuGame(){
+        int prizeLocation = (int)((Math.random() * 3) + 1); // random number between 1 and 3 inclusive
+        int cpuChoice = (int)((Math.random() * 3) + 1);
+        System.out.println("cpu chose door #"+ cpuChoice);
+        int doorToOpen = -1;
+        int switchableDoor = -1;
+        if(cpuChoice == prizeLocation)
+        {
+            for(int i = 1; i < 4; i++)
+            {
+                if(i != cpuChoice)
+                {
+                    if(switchableDoor == -1)
+                    {
+                        switchableDoor = i;
+                    }
+                    else
+                    {
+                        doorToOpen = i;
+                    }
+                }
+            }
+        }
+        else
+        {
+            for(int i = 1; i < 4; i++)
+            {
+                if(i != cpuChoice)
+                {
+                    if(i == prizeLocation)
+                    {
+                        switchableDoor = i;
+                    }
+                    else
+                    {
+                        doorToOpen = i;
+                    }
+                }
+            }
+        }
+        System.out.println("Door #" + doorToOpen + " is opened and does not contain the prize...");
+        System.out.println("cpu may switch to (Door #" + switchableDoor + ") or stick to door #"+cpuChoice+" ?");
+        Random rand= new Random();
+        int sORS = -1;
+        if (rand.nextBoolean()){
+            sORS = doorToOpen;
+        }else {
+            sORS = switchableDoor;
+        }
+        System.out.println("cpu chose door# "+ sORS);
+    }
     public static void game(Scanner scan){
         int playerChoice = -1; // int representing the player's door choice
         boolean isInvalid = true; // boolean used for checking input
@@ -151,6 +202,7 @@ public class MontyHall {
                     case "no":
                     case "N":
                     case "n":
+                        cpuGame();
                         break;
                 }
                 System.out.println("Do you want to play again? ");
